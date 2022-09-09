@@ -4,7 +4,15 @@ import numpy as np
 import os
 
 API_KEY = os.getenv('DBT_API_KEY')
+# moonpig Minro project: account_ID 801, project_id = 1031
 ACCOUNT_ID = 801
+
+def dbt_jobs(account_id = ACCOUNT_ID, api_key = API_KEY):
+    response = requests.get(
+        url = f"https://cloud.getdbt.com/api/v2/accounts/{account_id}/jobs/"
+        ,headers={'Authorization': f"Token {api_key}", 'Content-Type': 'application/json'},
+        params ={'project_id':1031}
+            )
 
 
 # get a list of all jobs in the project
@@ -27,7 +35,7 @@ for job in job_list:
 
 # get a list of jobs and succesful runs
 final_job = []
-final_job_name = [] 
+final_job_name = []
 final_run = []
 final_finished_at = []
 final_run_duration = []
@@ -64,7 +72,7 @@ for job in jobs:
         final_run.append(np.nan)
         final_finished_at.append(np.nan)
         final_run_duration.append(np.nan)
-   
+
 
 
 job_run_dict = {
@@ -81,7 +89,7 @@ print(job_run_df)
 # test: run id is correct, latest run should be mostly in this year
 
 final_models= []
-# testing case: 
+# testing case:
 #final_run = [80027077]
 for run in final_run:
     model_names = []
@@ -113,4 +121,4 @@ job_model = {
         }
 job_model_df = pd.DataFrame(job_model).explode('model_names')
 print(job_model_df)
-#job_model_df.to_csv('job_model_lkp.csv',index=False)    
+#job_model_df.to_csv('job_model_lkp.csv',index=False)
